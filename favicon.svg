@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 계란 흰자 -->
+  <ellipse cx="32" cy="36" rx="20" ry="24" fill="#F5F4F0"/>
+  <!-- 계란 윗부분 (둥글고 좁게) -->
+  <ellipse cx="32" cy="18" rx="13" ry="16" fill="#F5F4F0"/>
+  <!-- 합쳐진 외곽선 -->
+  <path d="M32 4 C20 4 12 14 12 26 C12 42 20 56 32 58 C44 56 52 42 52 26 C52 14 44 4 32 4Z" fill="#F5F4F0" stroke="#E8A020" stroke-width="2.5"/>
+  <!-- 노른자 -->
+  <circle cx="32" cy="38" r="10" fill="#E8A020"/>
+  <circle cx="29" cy="35" r="3" fill="#EFBA50" opacity="0.6"/>
+</svg>
