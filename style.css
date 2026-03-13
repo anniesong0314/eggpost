@@ -1,0 +1,231 @@
+/* ── CSS Variables ─────────────────────────────── */
+:root {
+  --primary:  #2D8C7A;
+  --primary-hover: #236e60;
+  --accent:   #E8A020;
+  --accent-hover: #c98918;
+  --light:    #A8D4EC;
+  --bg:       #F5F4F0;
+  --neutral:  #C8C8CC;
+  --dark:     #4A4A52;
+  --white:    #FFFFFF;
+  --radius:   12px;
+  --shadow:   0 2px 12px rgba(74,74,82,0.08);
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-display: 'Gowun Dodum', sans-serif;
+}
+
+/* ── Reset ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Header ────────────────────────────────────── */
+.header {
+  background: var(--primary);
+  padding: 16px 24px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(45,140,122,0.2);
+}
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo-egg { font-size: 24px; }
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: -0.5px;
+}
+
+/* ── Layout ────────────────────────────────────── */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Card ──────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card-label {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.card-label-sm {
+  display: block;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--dark);
+  opacity: 0.6;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+/* ── Memo Input ────────────────────────────────── */
+.memo-input {
+  width: 100%;
+  min-height: 160px;
+  border: 2px solid var(--neutral);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--dark);
+  resize: vertical;
+  transition: border-color 0.2s;
+  outline: none;
+  background: var(--bg);
+}
+.memo-input:focus { border-color: var(--primary); background: var(--white); }
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: var(--neutral);
+  margin-top: 6px;
+}
+
+/* ── Drop Zone ─────────────────────────────────── */
+.drop-zone {
+  border: 2px dashed var(--neutral);
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+  min-height: 90px;
+}
+.drop-zone.drag-over { border-color: var(--primary); background: rgba(45,140,122,0.04); }
+.drop-zone-inner {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 6px; padding: 24px;
+}
+.drop-icon { font-size: 28px; }
+.drop-text { font-size: 13px; color: var(--neutral); }
+.photo-previews {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding: 0 12px 12px;
+}
+.photo-thumb {
+  position: relative; width: 80px; height: 80px;
+}
+.photo-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 8px; display: block;
+}
+.photo-remove {
+  position: absolute; top: -6px; right: -6px;
+  background: var(--dark); color: white;
+  border: none; border-radius: 50%;
+  width: 20px; height: 20px; font-size: 11px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Chip Group ────────────────────────────────── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 7px 14px;
+  border: 2px solid var(--neutral);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--dark);
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+.chip-refine.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+/* ── Generate Button ───────────────────────────── */
+.btn-generate {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 16px rgba(232,160,32,0.3);
+}
+.btn-generate:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-generate:active { transform: translateY(0); }
+.btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* ── Result ────────────────────────────────────── */
+.card-result { border-left: 4px solid var(--primary); }
+.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.result-header .card-label { margin-bottom: 0; }
+.btn-copy {
+  padding: 6px 14px;
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-copy:hover { background: var(--primary); color: var(--white); }
+.btn-copy.copied { background: var(--primary); color: var(--white); }
+
+.result-text {
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  min-height: 60px;
+}
+.result-text mark {
+  background: rgba(232,160,32,0.35);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* ── Refine ────────────────────────────────────── */
+.refine-section { border-top: 1px solid var(--bg); margin-top: 20px; padding-top: 4px; }
+.btn-refine {
+  margin-top: 14px;
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-refine:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-refine:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Utility ───────────────────────────────────── */
+.hidden { display: none !important; }
+.btn-loading { display: inline; }

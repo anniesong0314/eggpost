@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eggpost — SNS 글 생성기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <span class="logo-egg">🥚</span>
+      <span class="logo-text">eggpost</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. 메모 입력 -->
+    <section class="card" id="section-memo">
+      <label class="card-label">어떤 이야기를 담을까요?</label>
+      <textarea
+        id="memo"
+        class="memo-input"
+        placeholder="오늘 있었던 일, 생각, 경험을 자유롭게 적어보세요..."
+        maxlength="1000"
+      ></textarea>
+      <div class="char-count"><span id="char-count">0</span> / 1000</div>
+    </section>
+
+    <!-- 2. 사진 업로드 -->
+    <section class="card" id="section-photos">
+      <label class="card-label">사진 (선택, 최대 3장)</label>
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="photo-input" accept="image/*" multiple hidden />
+        <div class="drop-zone-inner" id="drop-zone-inner">
+          <span class="drop-icon">📷</span>
+          <span class="drop-text">클릭하거나 여기에 사진을 끌어다 놓으세요</span>
+        </div>
+        <div class="photo-previews" id="photo-previews"></div>
+      </div>
+    </section>
+
+    <!-- 3. 플랫폼 선택 -->
+    <section class="card" id="section-platform">
+      <label class="card-label">플랫폼</label>
+      <div class="chip-group" id="platform-group">
+        <button class="chip" data-value="naver">네이버 블로그</button>
+        <button class="chip" data-value="linkedin">링크드인</button>
+        <button class="chip" data-value="youtube">유튜브</button>
+        <button class="chip" data-value="instagram">인스타그램</button>
+        <button class="chip" data-value="x">X (트위터)</button>
+      </div>
+    </section>
+
+    <!-- 4. 톤 선택 -->
+    <section class="card" id="section-tone">
+      <label class="card-label">글 톤</label>
+      <div class="chip-group" id="tone-group">
+        <button class="chip" data-value="warm">🌸 따뜻하고 감성적</button>
+        <button class="chip" data-value="professional">💼 전문적·인사이트</button>
+        <button class="chip" data-value="story">📖 이야기체·일상</button>
+        <button class="chip" data-value="impact">⚡ 짧고 임팩트</button>
+      </div>
+    </section>
+
+    <!-- 5. 생성 버튼 -->
+    <button class="btn-generate" id="btn-generate">
+      <span class="btn-text">✨ 글 생성하기</span>
+      <span class="btn-loading" hidden>생성 중...</span>
+    </button>
+
+    <!-- 6. 결과 -->
+    <section class="card card-result hidden" id="section-result">
+      <div class="result-header">
+        <label class="card-label">생성된 글</label>
+        <button class="btn-copy" id="btn-copy">복사</button>
+      </div>
+      <div class="result-text" id="result-text"></div>
+
+      <!-- 7. 다듬기 버튼 -->
+      <div class="refine-section">
+        <label class="card-label-sm">다듬기 (복수 선택 후 적용)</label>
+        <div class="chip-group" id="refine-group">
+          <button class="chip chip-refine" data-value="emotional">더 감성적으로</button>
+          <button class="chip chip-refine" data-value="shorter">더 짧게</button>
+          <button class="chip chip-refine" data-value="longer">더 길게</button>
+          <button class="chip chip-refine" data-value="friendly">더 친근하게</button>
+          <button class="chip chip-refine" data-value="hook">도입부 강하게</button>
+          <button class="chip chip-refine" data-value="hashtag-add">해시태그 추가</button>
+          <button class="chip chip-refine" data-value="hashtag-replace">해시태그 교체</button>
+        </div>
+        <button class="btn-refine" id="btn-refine" disabled>
+          <span class="btn-text">🪄 선택 적용하기</span>
+          <span class="btn-loading" hidden>다듬는 중...</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
