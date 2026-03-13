@@ -2,7 +2,7 @@
 
 // ── State ──────────────────────────────────────
 const state = {
-  photos: [],       // { file, dataUrl }[]
+  photos: [],
   platform: null,
   tone: null,
   result: '',
@@ -10,24 +10,26 @@ const state = {
 };
 
 // ── DOM refs ───────────────────────────────────
-const memo        = document.getElementById('memo');
-const charCount   = document.getElementById('char-count');
-const dropZone    = document.getElementById('drop-zone');
-const photoInput  = document.getElementById('photo-input');
-const photoPrev   = document.getElementById('photo-previews');
-const dropInner   = document.getElementById('drop-zone-inner');
-const btnGenerate = document.getElementById('btn-generate');
-const sectionRes  = document.getElementById('section-result');
-const resultText  = document.getElementById('result-text');
-const btnCopy     = document.getElementById('btn-copy');
-const btnRefine   = document.getElementById('btn-refine');
+const memo          = document.getElementById('memo');
+const charCount     = document.getElementById('char-count');
+const dropZone      = document.getElementById('drop-zone');
+const photoInput    = document.getElementById('photo-input');
+const photoPrev     = document.getElementById('photo-previews');
+const dropInner     = document.getElementById('drop-zone-inner');
+const btnGenerate   = document.getElementById('btn-generate');
+const skeleton      = document.getElementById('skeleton');
+const sectionRes    = document.getElementById('section-result');
+const resultText    = document.getElementById('result-text');
+const btnCopy       = document.getElementById('btn-copy');
+const btnRefine     = document.getElementById('btn-refine');
+const refineCustom  = document.getElementById('refine-custom');
 
 // ── Char counter ───────────────────────────────
 memo.addEventListener('input', () => {
   charCount.textContent = memo.value.length;
 });
 
-// ── Chip selection (single) ────────────────────
+// ── Chip: single select ────────────────────────
 function initSingleChip(groupId, stateKey) {
   document.getElementById(groupId).addEventListener('click', (e) => {
     const chip = e.target.closest('.chip');
@@ -40,18 +42,23 @@ function initSingleChip(groupId, stateKey) {
 initSingleChip('platform-group', 'platform');
 initSingleChip('tone-group', 'tone');
 
-// ── Chip selection (multi) for refine ─────────
+// ── Chip: multi select (refine) ────────────────
 document.getElementById('refine-group').addEventListener('click', (e) => {
   const chip = e.target.closest('.chip-refine');
   if (!chip) return;
   chip.classList.toggle('selected');
-  if (chip.classList.contains('selected')) {
-    state.refineSelected.add(chip.dataset.value);
-  } else {
-    state.refineSelected.delete(chip.dataset.value);
-  }
-  btnRefine.disabled = state.refineSelected.size === 0;
+  chip.classList.contains('selected')
+    ? state.refineSelected.add(chip.dataset.value)
+    : state.refineSelected.delete(chip.dataset.value);
+  updateRefineBtn();
 });
+
+// 직접 입력 시에도 버튼 활성화
+refineCustom.addEventListener('input', updateRefineBtn);
+
+function updateRefineBtn() {
+  btnRefine.disabled = state.refineSelected.size === 0 && !refineCustom.value.trim();
+}
 
 // ── Photo upload ───────────────────────────────
 dropZone.addEventListener('click', (e) => {
@@ -68,15 +75,11 @@ dropZone.addEventListener('drop', (e) => {
 });
 
 function handleFiles(files) {
-  const remaining = 3 - state.photos.length;
-  const toAdd = Array.from(files).slice(0, remaining);
+  const toAdd = Array.from(files).slice(0, 3 - state.photos.length);
   toAdd.forEach(file => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      state.photos.push({ file, dataUrl: e.target.result });
-      renderPhotos();
-    };
+    reader.onload = (e) => { state.photos.push({ file, dataUrl: e.target.result }); renderPhotos(); };
     reader.readAsDataURL(file);
   });
 }
@@ -90,10 +93,7 @@ function renderPhotos() {
   `).join('');
   dropInner.style.display = state.photos.length >= 3 ? 'none' : '';
   photoPrev.querySelectorAll('.photo-remove').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.photos.splice(+btn.dataset.index, 1);
-      renderPhotos();
-    });
+    btn.addEventListener('click', () => { state.photos.splice(+btn.dataset.index, 1); renderPhotos(); });
   });
 }
 
@@ -105,17 +105,19 @@ btnGenerate.addEventListener('click', async () => {
   if (!state.tone) return alert('글 톤을 선택해주세요.');
 
   setLoading(btnGenerate, true);
+  sectionRes.classList.add('hidden');
+  skeleton.classList.remove('hidden');
+
   try {
-    const body = {
-      memo: text,
-      platform: state.platform,
-      tone: state.tone,
-      images: state.photos.map(p => p.dataUrl),
-    };
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        memo: text,
+        platform: state.platform,
+        tone: state.tone,
+        images: state.photos.map(p => p.dataUrl),
+      }),
     });
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
@@ -125,6 +127,7 @@ btnGenerate.addEventListener('click', async () => {
     alert('오류가 발생했어요: ' + err.message);
   } finally {
     setLoading(btnGenerate, false);
+    skeleton.classList.add('hidden');
   }
 });
 
@@ -139,28 +142,33 @@ btnCopy.addEventListener('click', () => {
 
 // ── Refine ─────────────────────────────────────
 btnRefine.addEventListener('click', async () => {
-  if (state.refineSelected.size === 0) return;
+  const chips = Array.from(state.refineSelected);
+  const custom = refineCustom.value.trim();
+  if (!chips.length && !custom) return;
+
   setLoading(btnRefine, true);
   try {
-    const body = {
-      current: resultText.innerText,
-      platform: state.platform,
-      tone: state.tone,
-      refinements: Array.from(state.refineSelected),
-    };
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...body, mode: 'refine' }),
+      body: JSON.stringify({
+        mode: 'refine',
+        current: resultText.innerText,
+        platform: state.platform,
+        tone: state.tone,
+        refinements: chips,
+        customInstruction: custom,
+      }),
     });
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
     showResult(data.text, state.result);
     state.result = data.text;
 
-    // 선택 초기화
+    // 초기화
     document.querySelectorAll('#refine-group .chip-refine').forEach(c => c.classList.remove('selected'));
     state.refineSelected.clear();
+    refineCustom.value = '';
     btnRefine.disabled = true;
   } catch (err) {
     alert('다듬기 오류: ' + err.message);
@@ -172,22 +180,20 @@ btnRefine.addEventListener('click', async () => {
 // ── Helpers ────────────────────────────────────
 function showResult(newText, oldText = null) {
   sectionRes.classList.remove('hidden');
-  if (oldText) {
-    resultText.innerHTML = diffHighlight(oldText, newText);
-  } else {
-    resultText.textContent = newText;
-  }
+  resultText.innerHTML = oldText ? diffHighlight(oldText, newText) : escapeHtml(newText);
   sectionRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function diffHighlight(oldText, newText) {
-  // 줄 단위 간단 diff — 바뀐 줄에 하이라이트
   const oldLines = oldText.split('\n');
   const newLines = newText.split('\n');
-  return newLines.map((line, i) => {
-    const escaped = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return line !== oldLines[i] ? `<mark>${escaped}</mark>` : escaped;
-  }).join('\n');
+  return newLines.map((line, i) =>
+    line !== oldLines[i] ? `<mark>${escapeHtml(line)}</mark>` : escapeHtml(line)
+  ).join('\n');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function setLoading(btn, isLoading) {
