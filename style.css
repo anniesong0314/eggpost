@@ -1,18 +1,18 @@
 /* ── CSS Variables ─────────────────────────────── */
 :root {
-  --primary:  #2D8C7A;
+  --primary:       #2D8C7A;
   --primary-hover: #236e60;
-  --accent:   #E8A020;
-  --accent-hover: #c98918;
-  --light:    #A8D4EC;
-  --bg:       #F5F4F0;
-  --neutral:  #C8C8CC;
-  --dark:     #4A4A52;
-  --white:    #FFFFFF;
-  --radius:   12px;
-  --shadow:   0 2px 12px rgba(74,74,82,0.08);
-  --font-body: 'Noto Sans KR', sans-serif;
-  --font-display: 'Gowun Dodum', sans-serif;
+  --accent:        #E8A020;
+  --accent-hover:  #c98918;
+  --light:         #A8D4EC;
+  --bg:            #F5F4F0;
+  --neutral:       #C8C8CC;
+  --dark:          #4A4A52;
+  --white:         #FFFFFF;
+  --radius:        12px;
+  --shadow:        0 2px 12px rgba(74,74,82,0.08);
+  --font-body:     'Noto Sans KR', sans-serif;
+  --font-display:  'Gowun Dodum', sans-serif;
 }
 
 /* ── Reset ─────────────────────────────────────── */
@@ -93,12 +93,7 @@ body {
   background: var(--bg);
 }
 .memo-input:focus { border-color: var(--primary); background: var(--white); }
-.char-count {
-  text-align: right;
-  font-size: 12px;
-  color: var(--neutral);
-  margin-top: 6px;
-}
+.char-count { text-align: right; font-size: 12px; color: var(--neutral); margin-top: 6px; }
 
 /* ── Drop Zone ─────────────────────────────────── */
 .drop-zone {
@@ -110,22 +105,15 @@ body {
 }
 .drop-zone.drag-over { border-color: var(--primary); background: rgba(45,140,122,0.04); }
 .drop-zone-inner {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 6px; padding: 24px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; padding: 24px;
 }
 .drop-icon { font-size: 28px; }
 .drop-text { font-size: 13px; color: var(--neutral); }
-.photo-previews {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  padding: 0 12px 12px;
-}
-.photo-thumb {
-  position: relative; width: 80px; height: 80px;
-}
-.photo-thumb img {
-  width: 100%; height: 100%; object-fit: cover;
-  border-radius: 8px; display: block;
-}
+.photo-previews { display: flex; gap: 10px; flex-wrap: wrap; padding: 0 12px 12px; }
+.photo-thumb { position: relative; width: 80px; height: 80px; }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
 .photo-remove {
   position: absolute; top: -6px; right: -6px;
   background: var(--dark); color: white;
@@ -149,16 +137,8 @@ body {
   white-space: nowrap;
 }
 .chip:hover { border-color: var(--primary); color: var(--primary); }
-.chip.selected {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--white);
-}
-.chip-refine.selected {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--white);
-}
+.chip.selected { background: var(--primary); border-color: var(--primary); color: var(--white); }
+.chip-refine.selected { background: var(--accent); border-color: var(--accent); color: var(--white); }
 
 /* ── Generate Button ───────────────────────────── */
 .btn-generate {
@@ -173,14 +153,57 @@ body {
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
   box-shadow: 0 4px 16px rgba(232,160,32,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-generate:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-generate:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
 .btn-generate:active { transform: translateY(0); }
 .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
+/* ── Spinner ───────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Skeleton ──────────────────────────────────── */
+.skeleton-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ececec 25%, #f8f8f8 50%, #ececec 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+.w100 { width: 100%; }
+.w90  { width: 90%; }
+.w80  { width: 80%; }
+.w70  { width: 70%; }
+.w60  { width: 60%; }
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ── Result ────────────────────────────────────── */
 .card-result { border-left: 4px solid var(--primary); }
-.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.result-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
 .result-header .card-label { margin-bottom: 0; }
 .btn-copy {
   padding: 6px 14px;
@@ -209,6 +232,23 @@ body {
 
 /* ── Refine ────────────────────────────────────── */
 .refine-section { border-top: 1px solid var(--bg); margin-top: 20px; padding-top: 4px; }
+
+.refine-custom-wrap { margin-top: 12px; }
+.refine-custom-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--neutral);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dark);
+  outline: none;
+  background: var(--bg);
+  transition: border-color 0.2s;
+}
+.refine-custom-input:focus { border-color: var(--accent); background: var(--white); }
+.refine-custom-input::placeholder { color: var(--neutral); }
+
 .btn-refine {
   margin-top: 14px;
   width: 100%;
@@ -222,10 +262,10 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 .btn-refine:hover:not(:disabled) { background: var(--primary-hover); }
 .btn-refine:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* ── Utility ───────────────────────────────────── */
 .hidden { display: none !important; }
-.btn-loading { display: inline; }
