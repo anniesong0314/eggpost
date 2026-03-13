@@ -21,12 +21,9 @@
     <!-- 1. 메모 입력 -->
     <section class="card" id="section-memo">
       <label class="card-label">어떤 이야기를 담을까요?</label>
-      <textarea
-        id="memo"
-        class="memo-input"
+      <textarea id="memo" class="memo-input"
         placeholder="오늘 있었던 일, 생각, 경험을 자유롭게 적어보세요..."
-        maxlength="1000"
-      ></textarea>
+        maxlength="1000"></textarea>
       <div class="char-count"><span id="char-count">0</span> / 1000</div>
     </section>
 
@@ -69,8 +66,17 @@
     <!-- 5. 생성 버튼 -->
     <button class="btn-generate" id="btn-generate">
       <span class="btn-text">✨ 글 생성하기</span>
-      <span class="btn-loading" hidden>생성 중...</span>
+      <span class="btn-loading" hidden><span class="spinner"></span> 생성 중...</span>
     </button>
+
+    <!-- 로딩 스켈레톤 -->
+    <div class="skeleton-card hidden" id="skeleton">
+      <div class="skeleton-line w80"></div>
+      <div class="skeleton-line w100"></div>
+      <div class="skeleton-line w60"></div>
+      <div class="skeleton-line w90"></div>
+      <div class="skeleton-line w70"></div>
+    </div>
 
     <!-- 6. 결과 -->
     <section class="card card-result hidden" id="section-result">
@@ -80,9 +86,9 @@
       </div>
       <div class="result-text" id="result-text"></div>
 
-      <!-- 7. 다듬기 버튼 -->
+      <!-- 7. 다듬기 -->
       <div class="refine-section">
-        <label class="card-label-sm">다듬기 (복수 선택 후 적용)</label>
+        <label class="card-label-sm">다듬기 (복수 선택 또는 직접 입력)</label>
         <div class="chip-group" id="refine-group">
           <button class="chip chip-refine" data-value="emotional">더 감성적으로</button>
           <button class="chip chip-refine" data-value="shorter">더 짧게</button>
@@ -92,15 +98,21 @@
           <button class="chip chip-refine" data-value="hashtag-add">해시태그 추가</button>
           <button class="chip chip-refine" data-value="hashtag-replace">해시태그 교체</button>
         </div>
+
+        <div class="refine-custom-wrap">
+          <input type="text" id="refine-custom" class="refine-custom-input"
+            placeholder="직접 입력 (예: 마지막 문장을 질문으로 끝내줘)"
+            maxlength="200" />
+        </div>
+
         <button class="btn-refine" id="btn-refine" disabled>
-          <span class="btn-text">🪄 선택 적용하기</span>
-          <span class="btn-loading" hidden>다듬는 중...</span>
+          <span class="btn-text">🪄 적용하기</span>
+          <span class="btn-loading" hidden><span class="spinner"></span> 다듬는 중...</span>
         </button>
       </div>
     </section>
 
   </main>
-
   <script src="app.js"></script>
 </body>
 </html>
